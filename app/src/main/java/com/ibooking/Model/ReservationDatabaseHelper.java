@@ -33,7 +33,7 @@ public class ReservationDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableStatement = "CREATE TABLE " + RESERVATION_TABLE + " (" + COLUMN_ID + " INTERGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_HOTEL_ADDRESS
-                + " TEXT, " + COLUMN_CHECKIN_DATE + " TEXT, " + COLUMN_CHECKOUT_DATE + " TEXT)";
+                + " TEXT, " + COLUMN_CHECKIN_DATE + " DATE, " + COLUMN_CHECKOUT_DATE + " DATE)";
 
         db.execSQL(createTableStatement);
     }
