@@ -1,15 +1,21 @@
 package com.ibooking.Model;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import java.time.LocalDate;
+
 public class ReservationModel {
     private String HotelAddress;
     private int id;
-    private String checkInDate;
-    private String checkOutDate;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
 
     /**
      * Constructs a ReservationModel object with id, HotelAddress, checkInDate, checkOutDate
      */
-    public ReservationModel (int id, String HotelAddress, String checkInDate, String checkOutDate){
+    public ReservationModel (int id, String HotelAddress, LocalDate checkInDate, LocalDate checkOutDate){
         this.id = id;
         this.HotelAddress = HotelAddress;
         this.checkInDate = checkInDate;
@@ -33,19 +39,19 @@ public class ReservationModel {
         this.HotelAddress = HotelAddress;
     }
 
-    public String getcheckInDate() {
+    public LocalDate getcheckInDate() {
         return checkInDate;
     }
 
-    public void setcheckInDate(String checkInDate) {
+    public void setcheckInDate (LocalDate checkInDate) {
         this.checkInDate = checkInDate;
     }
 
-    public String getcheckOutDate() {
+    public LocalDate getcheckOutDate() {
         return checkInDate;
     }
 
-    public void setcheckOutDate(String checkInDate) {
+    public void setcheckOutDate(LocalDate checkInDate) {
         this.checkInDate = checkInDate;
     }
 
@@ -61,12 +67,13 @@ public class ReservationModel {
                 '}';
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void main(String[] args)
     {
-        ReservationModel rev1 = new ReservationModel(1, "123 Baker Street, 123123", "12/12/2021", "12/15/2021");
+        ReservationModel rev1 = new ReservationModel(1, "123 Baker Street, 123123", LocalDate.of(2021,12,12), LocalDate.of(2021,12,15));
         System.out.println(rev1.toString());
     }
 
     //expected output
-    //ReservationModelID = 1, HotelAddress = '123 Baker Street, 123123, Check In Date = 12/12/2021, Check Out Date = 12/15/2021}
+    //ReservationModelID = 1, HotelAddress = '123 Baker Street, 123123, Check In Date = 2021-12-12, Check Out Date = 2021-12-15}
 }

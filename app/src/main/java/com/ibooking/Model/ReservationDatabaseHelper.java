@@ -5,7 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
+
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +33,7 @@ public class ReservationDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableStatement = "CREATE TABLE " + RESERVATION_TABLE + " (" + COLUMN_ID + " INTERGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_HOTEL_ADDRESS
-                + " TEXT, " + COLUMN_CHECKIN_DATE + " TEXT, " + COLUMN_CHECKOUT_DATE + "TEXT)";
+                + " TEXT, " + COLUMN_CHECKIN_DATE + " TEXT, " + COLUMN_CHECKOUT_DATE + " TEXT)";
 
         db.execSQL(createTableStatement);
     }
@@ -44,14 +49,15 @@ public class ReservationDatabaseHelper extends SQLiteOpenHelper {
      * @param reservationModel the resevation to add
      * @return true if successfully inserted to database, false otherwise
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public boolean insertReservation(ReservationModel reservationModel){
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_HOTEL_ADDRESS, reservationModel.getHotelAddress());
-        cv.put(COLUMN_CHECKIN_DATE,  reservationModel.getcheckInDate());
-        cv.put(COLUMN_CHECKIN_DATE, reservationModel.getcheckOutDate());
+        cv.put(COLUMN_CHECKIN_DATE, reservationModel.getcheckInDate());  //this part needs more consideration
+        cv.put(COLUMN_CHECKOUT_DATE, reservationModel.getcheckOutDate());// ^^^^^^
 
         long insert = db.insert(RESERVATION_TABLE, null, cv);
         if (insert == -1)
@@ -82,6 +88,7 @@ public class ReservationDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public List<ReservationModel> getAllReservation()
     {
         List<ReservationModel> returnList = new ArrayList<>();
@@ -95,8 +102,10 @@ public class ReservationDatabaseHelper extends SQLiteOpenHelper {
             do {
                 int id = cursor.getInt(0);
                 String HotelAddress = cursor.getString(1);
-                String checkinDate = cursor.getString(2);
-                String checkoutDate = cursor.getString(3);
+                String checkin = cursor.getString(2);
+                LocalDate checkinDate = LocalDate.parse(checkin);
+                String checkout = cursor.getString(3);
+                LocalDate checkoutDate = LocalDate.parse(checkout);
 
                 ReservationModel newReservation = new ReservationModel(id, HotelAddress, checkinDate, checkoutDate );
                 returnList.add(newReservation);
