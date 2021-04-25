@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.LocalDate.*;
+
 public class ReservationDatabaseHelper extends SQLiteOpenHelper {
 
     public static final String RESERVATION_TABLE = "RESERVATION_TABLE";
@@ -33,7 +35,7 @@ public class ReservationDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableStatement = "CREATE TABLE " + RESERVATION_TABLE + " (" + COLUMN_ID + " INTERGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_HOTEL_ADDRESS
-                + " TEXT, " + COLUMN_CHECKIN_DATE + " DATE, " + COLUMN_CHECKOUT_DATE + " DATE)";
+                + " TEXT, " + COLUMN_CHECKIN_DATE + " TEXT, " + COLUMN_CHECKOUT_DATE + " TEXT)";
 
         db.execSQL(createTableStatement);
     }
@@ -56,8 +58,10 @@ public class ReservationDatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_HOTEL_ADDRESS, reservationModel.getHotelAddress());
-        cv.put(COLUMN_CHECKIN_DATE, reservationModel.getcheckInDate());  //this part needs more consideration
-        cv.put(COLUMN_CHECKOUT_DATE, reservationModel.getcheckOutDate());// ^^^^^^
+        String date1 = reservationModel.getcheckInDate().toString();
+        cv.put(COLUMN_CHECKIN_DATE, date1);
+        String date2 = reservationModel.getcheckOutDate().toString();
+        cv.put(COLUMN_CHECKOUT_DATE, date2);
 
         long insert = db.insert(RESERVATION_TABLE, null, cv);
         if (insert == -1)
@@ -103,9 +107,9 @@ public class ReservationDatabaseHelper extends SQLiteOpenHelper {
                 int id = cursor.getInt(0);
                 String HotelAddress = cursor.getString(1);
                 String checkin = cursor.getString(2);
-                LocalDate checkinDate = LocalDate.parse(checkin);
+                LocalDate checkinDate = parse(checkin);
                 String checkout = cursor.getString(3);
-                LocalDate checkoutDate = LocalDate.parse(checkout);
+                LocalDate checkoutDate = parse(checkout);
 
                 ReservationModel newReservation = new ReservationModel(id, HotelAddress, checkinDate, checkoutDate );
                 returnList.add(newReservation);
